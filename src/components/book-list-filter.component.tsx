@@ -34,7 +34,7 @@ export default function BookListFilterForm(props: BookListFilterProps) {
 
     return (
         <div className="row pt-3 justify-content-md-center">
-            <div className="col-1 pe-0">
+            <div className="col-4 col-md-2 col-lg-2 pe-0">
                 <Form.Select onChange={handleBookcaseSelectChange} value={props.bookcaseFilterIdx}>
                     <option key={-1} value={-1}>Bookcase</option>
                     {props.bookcases.map((bookcase:Bookcase) => (
@@ -42,7 +42,7 @@ export default function BookListFilterForm(props: BookListFilterProps) {
                     ))}
                 </Form.Select>
             </div>
-            <div className="col-1 px-0">
+            <div className="col-4 col-md-2 col-lg-2 px-0">
                 <Form.Select onChange={handleShelfSelectChange} value={props.shelfFilterIdx}>
                     <option key={-1} value={-1}>Shelf</option>
                     {props.shelves.filter(shelf => shelf.bookcase_id === props.bookcaseFilterIdx).map(shelf => (
@@ -50,16 +50,16 @@ export default function BookListFilterForm(props: BookListFilterProps) {
                     ))}
                 </Form.Select>
             </div>
-            <div className="col-1 px-0">
+            <div className="col-4 col-md-2 col-lg-2 px-0">
                 <Form.Control onChange={(e) => {props.setTitleFilter(e.target.value)}} placeholder="Title"/>
             </div>
-            <div className="col-1 px-0">
+            <div className="col-4 col-md-2 col-lg-2 px-0">
                 <Form.Control onChange={(e) => {props.setAuthorFilter(e.target.value)}} placeholder="Author"/>
             </div>
-            <div className="col-1 px-0">
+            <div className="col-4 col-md-2 col-lg-2 px-0">
                 <Form.Control onChange={(e) => {props.setIdentifierFilter(e.target.value)}} placeholder="Identifier"/>
             </div>
-            <Button onClick={clearFilters} variant="outline-danger" className="col-1">Clear Filters</Button>
+            <Button onClick={clearFilters} variant="outline-danger" className="col-4 col-md-2 col-lg-2">Clear Filters</Button>
         </div>
     )
 

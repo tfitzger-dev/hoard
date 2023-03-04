@@ -26,7 +26,7 @@ export default function BookList(props: BookListProps) {
     return (
         <>
             <div className="row pt-3">
-                <div className="col-8 offset-2 text-center">
+                <div className="col-6 pe-0 offset-md-3 text-center">
                     <Pagination className="d-inline-flex">
                         <Pagination.First onClick={() => {
                             setPage(1)
@@ -56,7 +56,7 @@ export default function BookList(props: BookListProps) {
                         }} disabled={page === maxPages()}/>
                     </Pagination>
                 </div>
-                <div className="col-2">
+                <div className="col-6 col-md-3">
                     <select className="form-select" value={pageSize} onChange={(event) => {
                         setPageSize(parseInt(event.target.value))
                     }}>
