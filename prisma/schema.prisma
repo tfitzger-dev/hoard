@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model book {
+  id              Int     @id @default(autoincrement())
+  identifier      String
+  identifier_type String
+  title           String
+  subtitle        String?
+  authors         String
+  shelf_id        Int?
+  thumbnailUrl    String
+  shelf           shelf?  @relation(fields: [shelf_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([shelf_id], map: "api_book_shelf_id_fbe848aa")
+}
+
+model bookcase {
+  id    Int     @id @default(autoincrement())
+  name  String
+  shelves shelf[]
+}
+
+model shelf {
+  id          Int      @id @default(autoincrement())
+  name        String
+  bookcase_id Int
+  books       book[]
+  bookcase    bookcase @relation(fields: [bookcase_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([bookcase_id], map: "api_shelf_bookcase_id_b997fc86")
+}
