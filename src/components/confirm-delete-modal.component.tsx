@@ -7,8 +7,9 @@ import {fullTitle} from "@/components/book-card.component";
 
 type ConfirmDeleteModalProps = {
     book:Book,
+    modalShow: boolean,
     onHide: Function,
-    modalShow: boolean
+    reloadBooks: Function
 }
 
 export default function ConfirmDeleteModal(props:ConfirmDeleteModalProps) {
@@ -21,8 +22,8 @@ export default function ConfirmDeleteModal(props:ConfirmDeleteModalProps) {
         fetch(`/api/books/${props.book.id}/`, requestOptions)
             .then(r => r.json)
             .then(d => {
-                console.log(`DELETED BOOK ${JSON.stringify(d)}`)
                 props.onHide()
+                props.reloadBooks()
             })
 
     }

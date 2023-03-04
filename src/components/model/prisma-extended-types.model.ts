@@ -6,7 +6,9 @@ export interface Book extends book {
 }
 
 export type Shelf = shelf & {
-    bookcase: Bookcase;
+    bookcase: bookcase;
 }
 
-export type Bookcase = bookcase;
+export type Bookcase = bookcase & {
+    shelves: shelf[];
+};

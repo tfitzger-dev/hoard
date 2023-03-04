@@ -1,10 +1,11 @@
 import {Button, Card, OverlayTrigger, Tooltip} from "react-bootstrap";
 import {Book} from "@/components/model/prisma-extended-types.model";
-import ConfirmDeleteModal from "@/components/ConfirmDeleteModal.component";
+import ConfirmDeleteModal from "@/components/confirm-delete-modal.component";
 import {useState} from "react";
 
 type BookCardProps = {
-    book: Book
+    book: Book,
+    reloadBooks: Function
 }
 
 export const fullTitle = (book:Book):string => {
@@ -75,6 +76,7 @@ export default function BookCard(props:BookCardProps) {
             modalShow={confirmModalShow}
             onHide={() => setConfirmModalShow(false)}
             book={props.book}
+            reloadBooks={props.reloadBooks}
         />
     </>)
 }

@@ -9,6 +9,7 @@ import BookList from "@/components/book-list.component";
 import {Bookcase, Shelf, Book} from "@/components/model/prisma-extended-types.model";
 import {filter} from "dom-helpers";
 import {fullTitle} from "@/components/book-card.component";
+import BookFormModal from "@/components/book-form-modal.component";
 
 
 export default function App() {
@@ -26,10 +27,7 @@ export default function App() {
     useEffect(() => {
         fetchBookcases();
         fetchShelves();
-        const interval = setInterval(() => {
-            fetchBooks();
-        }, 2000)
-        return () => clearInterval(interval)
+        fetchBooks();
     }, [])
 
     const fetchBookcases = () => {
@@ -51,7 +49,6 @@ export default function App() {
                 }
             )
     }
-
     const fetchBooks = () => {
         fetch("/api/books/")
             .then(res => res.json())
@@ -95,13 +92,15 @@ export default function App() {
                   bookcases={bookcases}
                   shelves={shelves}
                   books={filteredBooks()}
+                  reloadBooks={fetchBooks}
               />
-              {/*<BookForm
+              <BookFormModal
             show={modalShow}
-            onHide={() => setModalShow(false)}
             bookcases={bookcases}
             shelves={shelves}
-        />*/}
+            onHide={setModalShow}
+            reloadBooks={fetchBooks}
+        />
           </Container>
 
   )

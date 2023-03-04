@@ -6,7 +6,8 @@ import BookCard from "@/components/book-card.component";
 type BookListProps = {
     bookcases: Bookcase[],
     shelves: Shelf[],
-    books: Book[]
+    books: Book[],
+    reloadBooks: Function
 }
 
 export default function BookList(props: BookListProps) {
@@ -109,7 +110,7 @@ export default function BookList(props: BookListProps) {
                 {
                     props.books.slice((page - 1) * pageSize, page * pageSize).map((book:Book) => (
                         <div key={book.id} className="col d-flex align-items-stretch">
-                            <BookCard book={book} />
+                            <BookCard book={book} reloadBooks={props.reloadBooks} />
                         </div>
                     ))
                 }
