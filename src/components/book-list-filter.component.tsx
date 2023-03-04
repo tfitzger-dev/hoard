@@ -35,7 +35,7 @@ export default function BookListFilterForm(props: BookListFilterProps) {
     return (
         <div className="row pt-3 justify-content-md-center">
             <div className="col-4 col-md-2 col-lg-2 pe-0">
-                <Form.Select onChange={handleBookcaseSelectChange} value={props.bookcaseFilterIdx}>
+                <Form.Select onChange={handleBookcaseSelectChange} value={props.bookcaseFilterIdx} size={"sm"}>
                     <option key={-1} value={-1}>Bookcase</option>
                     {props.bookcases.map((bookcase:Bookcase) => (
                         <option key={bookcase.id} value={bookcase.id}>{bookcase.name}</option>
@@ -43,7 +43,7 @@ export default function BookListFilterForm(props: BookListFilterProps) {
                 </Form.Select>
             </div>
             <div className="col-4 col-md-2 col-lg-2 px-0">
-                <Form.Select onChange={handleShelfSelectChange} value={props.shelfFilterIdx}>
+                <Form.Select onChange={handleShelfSelectChange} value={props.shelfFilterIdx} size={"sm"}>
                     <option key={-1} value={-1}>Shelf</option>
                     {props.shelves.filter(shelf => shelf.bookcase_id === props.bookcaseFilterIdx).map(shelf => (
                         <option key={shelf.id} value={shelf.id}>{shelf.name}</option>
@@ -51,15 +51,15 @@ export default function BookListFilterForm(props: BookListFilterProps) {
                 </Form.Select>
             </div>
             <div className="col-4 col-md-2 col-lg-2 px-0">
-                <Form.Control onChange={(e) => {props.setTitleFilter(e.target.value)}} placeholder="Title"/>
+                <Form.Control onChange={(e) => {props.setTitleFilter(e.target.value)}} placeholder="Title" size={"sm"}/>
             </div>
             <div className="col-4 col-md-2 col-lg-2 px-0">
-                <Form.Control onChange={(e) => {props.setAuthorFilter(e.target.value)}} placeholder="Author"/>
+                <Form.Control onChange={(e) => {props.setAuthorFilter(e.target.value)}} placeholder="Author" size={"sm"}/>
             </div>
             <div className="col-4 col-md-2 col-lg-2 px-0">
-                <Form.Control onChange={(e) => {props.setIdentifierFilter(e.target.value)}} placeholder="Identifier"/>
+                <Form.Control onChange={(e) => {props.setIdentifierFilter(e.target.value)}} placeholder="Identifier" size={"sm"}/>
             </div>
-            <Button onClick={clearFilters} variant="outline-danger" className="col-4 col-md-2 col-lg-2">Clear Filters</Button>
+            <Button onClick={clearFilters} variant="outline-danger" className="col-4 col-md-2 col-lg-2" size={"sm"}>Clear Filters</Button>
         </div>
     )
 

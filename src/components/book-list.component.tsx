@@ -23,49 +23,86 @@ export default function BookList(props: BookListProps) {
         }
     }
 
+    const createPaginationItem = (i:number):JSX.Element => {
+        return <Pagination.Item key={i} active={i === page} onClick={() => setPage(i)}>
+            {i}
+        </Pagination.Item>
+    }
+
+    const createPaginationItems = ():JSX.Element[] => {
+        let items:JSX.Element[] = []
+        let maxPage = maxPages();
+        let maxPageItem = createPaginationItem(maxPage);
+        items.push(createPaginationItem(1))
+        if(maxPage <= 6) {
+            for(let i = 2; i <= 6; i++) {
+                if(i <= maxPage) {
+                    items.push(createPaginationItem(i))
+                }
+            }
+        }
+        else if(maxPage - page <= 3) {
+            items.push(<Pagination.Ellipsis key={-4}/>)
+            for(let i = maxPage - 4; i <= maxPage; i++) {
+                items.push(createPaginationItem(i))
+            }
+        }
+        else if(page < 5) {
+            for(let i = 2; i < 6; i++) {
+                if(i <= maxPage) {
+                    items.push(createPaginationItem(i))
+                }
+            }
+            if(items.length == 5) {
+                if(maxPage > 6) {
+                    items.push(<Pagination.Ellipsis key={-4}/>)
+                }
+                items.push(maxPageItem);
+            }
+        }
+        else if(page >= 5){
+            items.push(<Pagination.Ellipsis key={-3} />)
+            for(let i = page - 1; i <= page + 1; i++) {
+                if(i <= maxPage) {
+                    items.push(createPaginationItem(i))
+                }
+            }
+            if(items.length == 5) {
+                if(maxPage - page > 2) {
+                    items.push(<Pagination.Ellipsis key={-4}/>)
+                }
+                items.push(maxPageItem);
+            }
+        }
+        return items;
+    }
+
     return (
         <>
             <div className="row pt-3">
-                <div className="col-6 pe-0 offset-md-3 text-center">
-                    <Pagination className="d-inline-flex">
-                        <Pagination.First onClick={() => {
-                            setPage(1)
-                        }} disabled={page === 1}/>
+                <div className="col-12 text-center">
+                    <Pagination className="d-inline-flex" size={"sm"}>
                         <Pagination.Prev onClick={() => {
                             updatePage(page - 1)
                         }} disabled={page === 1}/>
-                        <li>
-                            <label id="paginationInputLabel" htmlFor="paginationInput"
-                                   className="col-form-label me-2 ms-1">Page</label>
-                        </li>
-                        <li>
-                            <Form.Control id="paginationInput" type="text" inputMode="numeric" pattern="[0-9]*"
-                                          value={page} onChange={(event) => {
-                                updatePage(parseInt(event.target.value))
-                            }} style={{width: "3.5rem"}}/>
-                        </li>
-                        <li>
-                            <span id="paginationDescription"
-                                  className="col-form-label text-nowrap px-2 d-inline-block">of {maxPages()}</span>
-                        </li>
+                        {createPaginationItems()}
                         <Pagination.Next onClick={() => {
                             updatePage(page + 1)
                         }} disabled={page === maxPages()}/>
-                        <Pagination.Last onClick={() => {
-                            setPage(maxPages())
-                        }} disabled={page === maxPages()}/>
+                        <li className="ps-3">
+                            <select className="form-select" value={pageSize} onChange={(event) => {
+                            setPageSize(parseInt(event.target.value))
+                        }}>
+                            <option value="15">15</option>
+                            <option value="30">30</option>
+                            <option value="45">45</option>
+                            <option value="60">60</option>
+                            <option value={props.books.length}>All</option>
+                        </select></li>
                     </Pagination>
                 </div>
-                <div className="col-6 col-md-3">
-                    <select className="form-select" value={pageSize} onChange={(event) => {
-                        setPageSize(parseInt(event.target.value))
-                    }}>
-                        <option value="15">15 per page</option>
-                        <option value="30">30 per page</option>
-                        <option value="45">45 per page</option>
-                        <option value="60">60 per page</option>
-                        <option value={props.books.length}>All</option>
-                    </select>
+                <div className="col-3 offset-3 col-md-3">
+
                 </div>
             </div>
             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xxl-6">
