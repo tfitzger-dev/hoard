@@ -1,18 +1,19 @@
-import '@/styles/vapor.min.css'
-import type { AppProps } from 'next/app'
-import {Container, Nav, Navbar} from "react-bootstrap";
+//import '@/styles/vapor.min.css'
+import type {AppProps} from 'next/app'
+import {Container} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
-import Head from 'next/head';
 import AppNav from "@/components/app-nav.component";
 import BookListFilterForm from "@/components/book-list-filter.component";
 import BookList from "@/components/book-list.component";
-import {Bookcase, Shelf, Book} from "@/components/model/prisma-extended-types.model";
-import {filter} from "dom-helpers";
+import {Book, Bookcase, Shelf} from "@/components/model/prisma-extended-types.model";
 import {fullTitle} from "@/components/book-card.component";
 import BookFormModal from "@/components/book-form-modal.component";
+import Head from "next/head";
 
 
-export default function App() {
+export default function App(props: AppProps) {
+    const [theme, setTheme] = useState('vapor')
+
     const [modalShow, setModalShow] = useState(false);
     const [bookcases, setBookcases] = useState<Bookcase[]>([]);
     const [shelves, setShelves] = useState<Shelf[]>([]);
@@ -69,39 +70,43 @@ export default function App() {
         })
     }
 
-  return(
-          <Container fluid="true">
-              <AppNav setModalShow={setModalShow} />
-              <BookListFilterForm
-                  bookcases={bookcases}
-                  shelves={shelves}
-                  bookcaseFilterIdx={bookcaseFilterIdx}
-                  shelfFilterIdx={shelfFilterIdx}
-                  setAuthorFilter={setAuthorFilter}
-                  setBookcaseFilterIdx={setBookcaseFilterIdx}
-                  setIdentifierFilter={setIdentifierFilter}
-                  setShelfFilterIdx={setShelfFilterIdx}
-                  setTitleFilter={setTitleFilter}
-              />
-{/*              <h3>Bookcase Filter: {bookcaseFilterIdx}</h3>
+    return (
+        <>
+            <head>
+                <link id="theme-style" rel="stylesheet" href={`https://bootswatch.com/5/${theme}/bootstrap.min.css`} />
+            </head>
+            <Container fluid="true">
+                <AppNav setModalShow={setModalShow} theme={theme} setTheme={setTheme}/>
+                <BookListFilterForm
+                    bookcases={bookcases}
+                    shelves={shelves}
+                    bookcaseFilterIdx={bookcaseFilterIdx}
+                    shelfFilterIdx={shelfFilterIdx}
+                    setAuthorFilter={setAuthorFilter}
+                    setBookcaseFilterIdx={setBookcaseFilterIdx}
+                    setIdentifierFilter={setIdentifierFilter}
+                    setShelfFilterIdx={setShelfFilterIdx}
+                    setTitleFilter={setTitleFilter}
+                />
+                {/*              <h3>Bookcase Filter: {bookcaseFilterIdx}</h3>
               <h3>Shelf Filter: {shelfFilterIdx}</h3>
               <h3>Title Filter: {titleFilter}</h3>
               <h3>Author Filter: {authorFilter}</h3>
               <h3>Identifier Filter: {identifierFilter}</h3>*/}
-              <BookList
-                  bookcases={bookcases}
-                  shelves={shelves}
-                  books={filteredBooks()}
-                  reloadBooks={fetchBooks}
-              />
-              <BookFormModal
-            show={modalShow}
-            bookcases={bookcases}
-            shelves={shelves}
-            onHide={setModalShow}
-            reloadBooks={fetchBooks}
-        />
-          </Container>
-
-  )
+                <BookList
+                    bookcases={bookcases}
+                    shelves={shelves}
+                    books={filteredBooks()}
+                    reloadBooks={fetchBooks}
+                />
+                <BookFormModal
+                    show={modalShow}
+                    bookcases={bookcases}
+                    shelves={shelves}
+                    onHide={setModalShow}
+                    reloadBooks={fetchBooks}
+                />
+            </Container>
+        </>
+    )
 }
