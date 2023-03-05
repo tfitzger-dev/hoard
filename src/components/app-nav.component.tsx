@@ -1,6 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Button, Container, DropdownButton, FormSelect, Nav, Navbar, NavItem, NavLink} from "react-bootstrap";
-import {Dropdown} from "@restart/ui";
+import React from 'react';
+import {Container, FormSelect, Nav, Navbar} from "react-bootstrap";
 
 type AppNavProps = {
     theme: string,

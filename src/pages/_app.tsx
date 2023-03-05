@@ -1,5 +1,3 @@
-//import '@/styles/vapor.min.css'
-import type {AppProps} from 'next/app'
 import {Container} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
 import AppNav from "@/components/app-nav.component";
@@ -11,7 +9,7 @@ import BookFormModal from "@/components/book-form-modal.component";
 import Head from "next/head";
 
 
-export default function App(props: AppProps) {
+export default function App() {
     const [theme, setTheme] = useState('vapor')
 
     const [modalShow, setModalShow] = useState(false);
@@ -72,9 +70,11 @@ export default function App(props: AppProps) {
 
     return (
         <>
-            <head>
+            <Head>
                 <link id="theme-style" rel="stylesheet" href={`https://bootswatch.com/5/${theme}/bootstrap.min.css`} />
-            </head>
+                <title>The Hoard</title>
+
+            </Head>
             <Container fluid="true">
                 <AppNav setModalShow={setModalShow} theme={theme} setTheme={setTheme}/>
                 <BookListFilterForm

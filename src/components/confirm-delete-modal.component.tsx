@@ -1,6 +1,4 @@
-import React, {useState} from 'react';
-import PropTypes from 'prop-types';
-import styles from './ConfirmDeleteModal.module.scss';
+import React from 'react';
 import {Button, Modal, ModalHeader} from "react-bootstrap";
 import {Book} from "@/components/model/prisma-extended-types.model";
 import {fullTitle} from "@/components/book-card.component";
@@ -21,7 +19,7 @@ export default function ConfirmDeleteModal(props:ConfirmDeleteModalProps) {
         }
         fetch(`/api/books/${props.book.id}/`, requestOptions)
             .then(r => r.json)
-            .then(d => {
+            .then(ignored => {
                 props.onHide()
                 props.reloadBooks()
             })

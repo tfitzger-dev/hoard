@@ -1,8 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
-
-import {symlink} from "fs";
-import {create} from "domain";
+import type {NextApiRequest, NextApiResponse} from 'next'
 import {PrismaClient} from "@prisma/client";
 
 const prismaClient:any = new PrismaClient()
@@ -13,8 +10,8 @@ type ApiError = {
 
 export class BaseApiHandler<T>{
     private model:string
-    private modelId: string
-    private includeArgs:{}
+    private readonly modelId: string
+    private readonly includeArgs:{}
 
     private modelClient:any
     constructor(model:string, includeArgs:{} = {}) {

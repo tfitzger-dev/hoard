@@ -1,7 +1,8 @@
 import {Button, Card, OverlayTrigger, Tooltip} from "react-bootstrap";
 import {Book} from "@/components/model/prisma-extended-types.model";
 import ConfirmDeleteModal from "@/components/confirm-delete-modal.component";
-import {useState} from "react";
+import React, {useState,} from "react";
+import Image from "next/image";
 
 type BookCardProps = {
     book: Book,
@@ -23,8 +24,7 @@ export default function BookCard(props:BookCardProps) {
         <Card className="card w-100">
             <div className="row g-0">
                 <div className="col-3 my-auto image-placeholder">
-                    <img src={props.book.thumbnailUrl} className="img-fluid rounded-start bookTitle"
-                         alt="No Cover Found"/>
+                    <Image loader={() => props.book.thumbnailUrl} src={props.book.thumbnailUrl} alt="No Cover Found" width={100} height={100}/>
                 </div>
                 <div className="col-9">
                     <Card.Header>
@@ -32,11 +32,18 @@ export default function BookCard(props:BookCardProps) {
                             <OverlayTrigger
                                 placement="top"
                                 delay={{show: 250, hide: 400}}
+                                defaultShow={false}
+                                flip={false}
+                                onHide={undefined}
+                                onToggle={undefined}
+                                popperConfig={{}}
+                                show={undefined}
+                                target={undefined} trigger={'hover'}
                                 overlay={
                                     <Tooltip id={`title-tooltip-${props.book.id}`}>
                                         {fullTitle(props.book)}
                                     </Tooltip>
-                                }>
+                                } >
                                 <span>{truncatedText(fullTitle(props.book), 20)}</span>
                             </OverlayTrigger>
                         </Card.Title>
@@ -44,6 +51,13 @@ export default function BookCard(props:BookCardProps) {
                             <OverlayTrigger
                                 placement="bottom"
                                 delay={{show: 250, hide: 400}}
+                                defaultShow={false}
+                                flip={false}
+                                onHide={undefined}
+                                onToggle={undefined}
+                                popperConfig={{}}
+                                show={undefined}
+                                target={undefined} trigger={'hover'}
                                 overlay={
                                     <Tooltip id={`authors-tooltip-${props.book.id}`}>
                                         {props.book.authors}

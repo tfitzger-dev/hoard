@@ -1,5 +1,3 @@
-import {Book} from "@/components/model/prisma-extended-types.model";
-import {book} from "@prisma/client";
 import {searchBook} from "@/components/book-form-modal.component";
 
 export const baseOpenLibraryUrl:string = 'https://openlibrary.org'
@@ -17,7 +15,7 @@ const getMetadata = async (key:string, value:string) => {
 
 const extractOlidFromUrl = (bookUrl: string, urlType:string) => {
     const olUrlPattern = new RegExp(`[/]${urlType}[/]([0-9a-zA-Z]+)`)
-    var matches = olUrlPattern.exec(bookUrl)
+    let matches = olUrlPattern.exec(bookUrl)
     if(matches) {
         return matches[1]
     }
@@ -47,17 +45,16 @@ export const lookupBookByIdent = async (identifier:string, identifierType:string
     if(olid){
         let response = await fetch(`${baseOpenLibraryUrl}/books/${olid}.json`).then(resp => resp.json())
         if(response) {
-            let foundBook:searchBook = {
+            return {
                 identifier,
                 identifier_type: identifierType,
                 title: ('title' in response) ? response.title : "",
-                subtitle:('subtitle' in response) ? response.subtitle: "",
+                subtitle: ('subtitle' in response) ? response.subtitle : "",
                 authors: ('authors' in response) ? await getAuthors(response.authors) : "",
                 thumbnailUrl: `https://covers.openlibrary.org/b/olid/${olid}-M.jpg`,
                 shelf_id: undefined,
                 bookcase_id: undefined
             }
-            return foundBook
         }
     }
 }

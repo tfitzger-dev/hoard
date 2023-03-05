@@ -57,12 +57,11 @@ export default function BookFormModal(props:BookFormModalProps) {
             body: JSON.stringify({data: bookToSave})
         }
         console.log(requestOptions.body)
-        fetch('/api/books/', requestOptions).then(r => r.json()).then(d => {
+        fetch('/api/books/', requestOptions).then(r => r.json()).then(() => {
             props.onHide(false)
             props.reloadBooks()
         })
     }
-
     return (
         <Modal
             show={props.show}
