@@ -15,7 +15,7 @@ export default function AppNav(props: AppNavProps) {
     return (
         <Navbar bg="primary" variant="dark" sticky="top">
             <Container>
-                <Navbar.Brand href="#home">The Horde</Navbar.Brand>
+                <Navbar.Brand href="#home">The Hoard</Navbar.Brand>
                 <Nav className="me-auto">
                     <Nav.Link onClick={() => props.setModalShow(true)}>Add Book</Nav.Link>
                 </Nav>
