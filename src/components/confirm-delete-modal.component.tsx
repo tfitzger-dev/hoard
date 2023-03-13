@@ -4,15 +4,15 @@ import {Book} from "@/components/model/prisma-extended-types.model";
 import {fullTitle} from "@/components/book-card.component";
 
 type ConfirmDeleteModalProps = {
-    book:Book,
+    book: Book,
     modalShow: boolean,
     onHide: Function,
     reloadBooks: Function
 }
 
-export default function ConfirmDeleteModal(props:ConfirmDeleteModalProps) {
+export default function ConfirmDeleteModal(props: ConfirmDeleteModalProps) {
 
-    const deleteBook =() => {
+    const deleteBook = () => {
         const requestOptions = {
             method: "DELETE",
             headers: {'Content-Type': 'application/json'}
@@ -27,11 +27,13 @@ export default function ConfirmDeleteModal(props:ConfirmDeleteModalProps) {
     }
 
     return (
-        <Modal show={props.modalShow} aria-labelledby="confirm-delete-modal">
+        <Modal show={props.modalShow} aria-labelledby="confirm-delete-modal" onHide={() => {
+            props.onHide()
+        }}>
             <ModalHeader>Confirm Delete</ModalHeader>
             <Modal.Body>Are you sure you want to delete <strong>{fullTitle(props.book)}</strong></Modal.Body>
             <Modal.Footer>
-                <Button variant="outline-danger" onClick={() => props.onHide}>Cancel</Button>
+                <Button variant="outline-danger" onClick={() => props.onHide()}>Cancel</Button>
                 <div className="vr"/>
                 <Button variant="outline-success" onClick={deleteBook} form="new-book-form">Delete</Button>
             </Modal.Footer>

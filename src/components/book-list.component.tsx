@@ -110,7 +110,7 @@ export default function BookList(props: BookListProps) {
                 {
                     props.books.slice((page - 1) * pageSize, page * pageSize).map((book:Book) => (
                         <div key={book.id} className="col d-flex align-items-stretch">
-                            <BookCard book={book} reloadBooks={props.reloadBooks} />
+                            <BookCard book={book} reloadBooks={props.reloadBooks} bookcases={props.bookcases} shelves={props.shelves} />
                         </div>
                     ))
                 }

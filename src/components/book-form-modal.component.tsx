@@ -4,7 +4,7 @@ import React, {useState} from "react";
 import {lookupBookByIdent} from "@/handler/open-api.handler";
 import {book} from "@prisma/client";
 
-type Override<T1, T2> = Omit<T1, keyof  T2> & T2;
+export type Override<T1, T2> = Omit<T1, keyof  T2> & T2;
 
 type searchBookOverride = Override<book, { shelf_id: string|number|undefined, subtitle: string|undefined, bookcase_id: string|undefined }>
 export type searchBook = Omit<searchBookOverride, keyof {id: number}>
@@ -56,7 +56,6 @@ export default function BookFormModal(props:BookFormModalProps) {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({data: bookToSave})
         }
-        console.log(requestOptions.body)
         fetch('/api/books/', requestOptions).then(r => r.json()).then(() => {
             props.onHide(false)
             props.reloadBooks()

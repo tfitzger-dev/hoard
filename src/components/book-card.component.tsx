@@ -1,11 +1,19 @@
-import {Button, Card, OverlayTrigger, Tooltip} from "react-bootstrap";
-import {Book} from "@/components/model/prisma-extended-types.model";
+import {Button, ButtonGroup, Card, FormSelect, OverlayTrigger, Tooltip} from "react-bootstrap";
+import {Book, Bookcase, Shelf} from "@/components/model/prisma-extended-types.model";
 import ConfirmDeleteModal from "@/components/confirm-delete-modal.component";
 import React, {useState,} from "react";
 import Image from "next/image";
+import {FaEdit, FaSave, FaTrashAlt, FaWindowClose} from "react-icons/fa";
+import {book} from "@prisma/client";
+import {Override} from "@/components/book-form-modal.component";
+
+export type UpdateBook = Override<book, { id: number|undefined, shelf: Shelf|undefined }>
 
 type BookCardProps = {
     book: Book,
+    bookcases: Bookcase[],
+    shelves: Shelf[],
+
     reloadBooks: Function
 }
 
@@ -14,12 +22,100 @@ export const fullTitle = (book:Book):string => {
     return `${book.title}${subtitle}`
 }
 
-const truncatedText = (text:string, length:number) => {
-    return (text.length > (length + 3)) ? `${text.substring(0, length)}...` : text
-}
-
 export default function BookCard(props:BookCardProps) {
     const [confirmModalShow, setConfirmModalShow] = useState(false);
+    const [editing, setEditing] = useState(false);
+    const [newBookcase, setNewBookcase] = useState(props.book.shelf.bookcase_id);
+
+    const truncatedText = (text:string, length:number) => {
+        return (text.length > (length + 3)) ? `${text.substring(0, length)}...` : text
+    }
+
+    const saveBookUpdate = () => {
+        let updateBook:UpdateBook = Object.assign({}, props.book)
+        delete updateBook.id
+        delete updateBook.shelf
+
+        const requestOptions = {
+            method: "PUT",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(updateBook)
+        }
+        fetch(`/api/books/${props.book.id}/`, requestOptions)
+            .then(r => r.json)
+            .then(ignored => {
+                setEditing(false);
+                props.reloadBooks()
+            })
+    }
+
+    const updateBookcase = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        let bookcaseId: number = parseInt(event.target.value)
+        setNewBookcase(bookcaseId);
+        let newShelfId:number|undefined = props.shelves.find(shelf => shelf.bookcase_id === bookcaseId)?.id;
+        props.book.shelf_id = (newShelfId) ? newShelfId : props.book.shelf_id
+    }
+
+    const locationDisplay = () => {
+        return editing ?
+            (
+                <>
+                    <div className="row">
+                        <div className="col-4"><strong>Case:</strong></div>
+                        <div className="col-8">
+                            <FormSelect size={"sm"} defaultValue={props.book.shelf.bookcase_id} onChange={updateBookcase} >
+                                {props.bookcases.map(bookcase => (<option key={bookcase.id} value={bookcase.id}>{bookcase.name}</option>))}
+                            </FormSelect>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-4"><strong>Shelf:</strong></div>
+                        <div className="col-8">
+                            <FormSelect size={"sm"} defaultValue={props.book.shelf.id} onChange={(event) => {props.book.shelf_id = parseInt(event.target.value)}}>
+                                {props.shelves.filter(shelf => shelf.bookcase_id === newBookcase).map(shelf => (<option key={shelf.id} value={shelf.id}>{shelf.name}</option>))}
+                            </FormSelect>
+                        </div>
+                    </div>
+                </>
+            ):
+            (
+                <>
+                    <div className="row">
+                        <div className="col-4"><strong>Case:</strong></div>
+                        <div className="col-8">{props.book.shelf.bookcase.name}</div>
+                    </div>
+                    <div className="row">
+                        <div className="col-4"><strong>Shelf:</strong></div>
+                        <div className="col-8">{props.book.shelf.name}</div>
+                    </div>
+                </>
+            )
+    }
+
+    const createButtons = () => {
+        return editing ?
+            (
+                <ButtonGroup className="float-end">
+                    <Button variant="outline-success"
+                            onClick={() => saveBookUpdate()}><FaSave /></Button>
+                    <Button variant="outline-danger"
+                            onClick={() => setEditing(false)}><FaWindowClose/></Button>
+
+                </ButtonGroup>
+            )
+            : (
+                <ButtonGroup className="float-end">
+                    <Button variant="outline-info"
+                            onClick={() => setEditing(true)}><FaEdit/></Button>
+                    <Button variant="outline-danger"
+                            onClick={() => setConfirmModalShow(true)}><FaTrashAlt/></Button>
+
+                </ButtonGroup>
+            )
+    }
+
+
+
     return (<>
         <Card className="card w-100">
             <div className="row g-0">
@@ -38,7 +134,7 @@ export default function BookCard(props:BookCardProps) {
                                 onToggle={undefined}
                                 popperConfig={{}}
                                 show={undefined}
-                                target={undefined} trigger={'hover'}
+                                target={undefined} trigger={['hover', 'focus']}
                                 overlay={
                                     <Tooltip id={`title-tooltip-${props.book.id}`}>
                                         {fullTitle(props.book)}
@@ -57,7 +153,7 @@ export default function BookCard(props:BookCardProps) {
                                 onToggle={undefined}
                                 popperConfig={{}}
                                 show={undefined}
-                                target={undefined} trigger={'hover'}
+                                target={undefined} trigger={['hover', 'focus']}
                                 overlay={
                                     <Tooltip id={`authors-tooltip-${props.book.id}`}>
                                         {props.book.authors}
@@ -68,19 +164,10 @@ export default function BookCard(props:BookCardProps) {
                         </Card.Subtitle>
                     </Card.Header>
                     <Card.Body>
-                        <div className="row">
-                            <div className="col-4"><strong>Case:</strong></div>
-                            <div className="col-8">{props.book.shelf.bookcase.name}</div>
-                        </div>
-                        <div className="row">
-                            <div className="col-4"><strong>Shelf:</strong></div>
-                            <div className="col-8">{props.book.shelf.name}</div>
-                        </div>
+                        {locationDisplay()}
                     </Card.Body>
                     <Card.Footer className="bg-transparent">
-                        <Button variant="outline-danger" size="sm"
-                                className="float-end"
-                                onClick={() => setConfirmModalShow(true)}>X</Button>
+                        {createButtons()}
                     </Card.Footer>
                 </div>
             </div>
@@ -88,7 +175,9 @@ export default function BookCard(props:BookCardProps) {
 
         <ConfirmDeleteModal
             modalShow={confirmModalShow}
-            onHide={() => setConfirmModalShow(false)}
+            onHide={() => {
+                setConfirmModalShow(false)
+            }}
             book={props.book}
             reloadBooks={props.reloadBooks}
         />
